@@ -17,17 +17,27 @@ imageDatas = ((imageDatasArr) => {
 })(imageDatas);
 //获取区间内的一个随机值
 var getRangeRandom = (low, high) => Math.floor(Math.random() * (high - low) + low);
-
+var get30DegRandom = () => {
+  let deg = '';
+  deg = Math.random() > 0.5 ? '' : '-';
+  return deg + Math.ceil(Math.random() * 30);
+};
 
 //单个图片组件
 class ImgFigure extends React.Component {
-
 
   render() {
     var styleObj = {};
     //如果props属性中指定了这张图片的位置,则使用
     if (this.props.arrange.pos) {
       styleObj = this.props.arrange.pos;
+    }
+
+    //如果图片的旋转角度有值并且不为0，添加旋转角度
+    if (this.props.arrange.rotate) {
+      (['Moz', 'Ms', 'Webkit', '']).forEach((value) => {
+        styleObj[value + 'Transform'] = 'rotate(' + this.props.arrange.rotate + 'deg)';
+      })
     }
 
 
@@ -112,8 +122,8 @@ class GalleryByReactApp extends React.Component {
         pos: {
           top: getRangeRandom(vPosRangeTopY[0], vPosRangeTopY[1]),
           left: getRangeRandom(vPosRangeX[0], vPosRangeX[1])
-        }
-
+        },
+        rotate : get30DegRandom()
       };
     });
 
@@ -131,7 +141,8 @@ class GalleryByReactApp extends React.Component {
         pos: {
           top: getRangeRandom(hPosRangeY[0], hPosRangeY[1]),
           left: getRangeRandom(hPosRangeLORX[0], hPosRangeLORX[1])
-        }
+        },
+        rotate : get30DegRandom()
       };
     }
     if (imgsArrangTopArr && imgsArrangTopArr[0]) {
@@ -162,7 +173,6 @@ class GalleryByReactApp extends React.Component {
       halfStageH = Math.ceil(stageH / 2);
 
     //拿到一个imgFigure的大小
-
     let imgFigureDOM = ReactDOM.findDOMNode(this.refs.imgFigure0),
       imgW = imgFigureDOM.scrollWidth,
       imgH = imgFigureDOM.scrollHeight,
@@ -203,9 +213,7 @@ class GalleryByReactApp extends React.Component {
             left: 0,
             top: 0
           },
-          rotate: 0,
-          isInverse: false,
-          isCenter: false
+          rotate : get30DegRandom()
         }
       }
       imgFigures.push(<ImgFigure data={value} key={index} ref={'imgFigure'+index}
