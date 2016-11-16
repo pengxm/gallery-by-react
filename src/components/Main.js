@@ -57,7 +57,7 @@ class ImgFigure extends React.Component {
 
     //如果图片的旋转角度有值并且不为0，添加旋转角度
     if (this.props.arrange.rotate) {
-      (['Moz', 'Ms', 'Webkit', '']).forEach((value) => {
+      (['Moz', 'ms', 'Webkit', '']).forEach((value) => {
         styleObj[value + 'Transform'] = 'rotate(' + this.props.arrange.rotate + 'deg)';
       })
     }
@@ -83,8 +83,36 @@ class ImgFigure extends React.Component {
   }
 }
 
-class ControllerUnits extends React.Component {
+class ControllerUnit extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleClick = this.handleClick.bind(this);
+  }
+  handleClick(e){
+    //如果点击的是居中的图片 则翻转按钮
+    if(this.props.arrange.isCenter){
+      this.props.inverse();
+    } else {
+      this.props.center();
+    }
 
+    e.stopPropagation();
+    e.preventDefault();
+  }
+  render(){
+    var controllerUnitClassName = 'controller-unit';
+    //如果图片居中显示居中按钮
+    if(this.props.arrange.isCenter){
+      controllerUnitClassName += ' is-center-btn';
+      // 如果同时对应的翻转图片， 显示翻转按钮态
+      if(this.props.arrange.isInverse){
+        controllerUnitClassName += ' is-inverse-btn';
+      }
+    }
+    return(
+      <span className={ controllerUnitClassName } onClick={this.handleClick}>{}</span>
+    )
+  }
 }
 
 class GalleryByReactApp extends React.Component {
@@ -262,7 +290,9 @@ class GalleryByReactApp extends React.Component {
       }
       imgFigures.push(<ImgFigure data={value} key={index} ref={'imgFigure'+index}
                                  arrange={this.state.imgsArrangeArr[index]} inverse={this.isInverse(index)} center={this.isCenter(index)}/>);
+      controllerUnits.push(<ControllerUnit key={index} arrange={this.state.imgsArrangeArr[index]} inverse={this.isInverse(index)} center={this.isCenter(index)} />);
     });
+
     return (
       <section className="stage" ref="stage">
         <section className="img-sec">
