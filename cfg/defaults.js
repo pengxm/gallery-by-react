@@ -43,7 +43,7 @@ function getDefaultModules() {
       //},
       {
         test: /\.(png|jpg|gif|woff|woff2|eot|ttf|svgs)$/,
-        loader: 'url-loader?limit=8192'
+        loader: 'url-loader?limit=8192&name=images/[name].[hash:8].[ext]'
       }, {
         test: /\.(mp4|ogg|svg)$/,
         loader: 'file-loader'
